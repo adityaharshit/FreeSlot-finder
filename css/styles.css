@@ -1,0 +1,134 @@
+:root {
+  --primary: #65558f;
+  --white: #fefefe;
+  --footer: #0a142f;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.btn {
+  border: 0;
+  border-radius: 50px;
+  padding: 10px 20px;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+}
+
+.navbar {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.navbar-brand {
+  color: var(--white);
+}
+
+.nav-item a {
+  color: var(--white);
+}
+
+.section-heading {
+  text-align: center;
+  margin: 50px 0;
+  padding-top: 50px;
+  font-weight: bold;
+}
+
+.section-heading h1 {
+  font-weight: bold;
+}
+
+.hero .container p {
+  font-weight: 200;
+}
+
+
+
+
+
+.hero-login {
+  background-image: url("");
+  background-size: cover;
+  height: 100vh;
+}
+
+.login-card {
+  height: 80vh !important;
+  width: 90%;
+  /* background-color: black; */
+  border-radius: 25px 20px 20px 25px;
+  /* Make it a glass like effect by */
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(16px);
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+.login-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-basis: 50%;
+  height: 100%;
+  width: 100%;
+  color: var(--white);
+}
+
+.login-form div h1 {
+  font-weight: bolder;
+}
+
+.login-form div p {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px 0 0 20px;
+  flex-basis: 50%;
+  padding: 10px;
+}
+
+.login-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px 0 0 20px;
+  /* border-radius: 20px; */
+}
+
+.register-link a,
+.forgot-password {
+  color: #a797d1;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.login-btn {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.signup img {
+  border-radius: 0 20px 20px 0;
+}
+
+
+#togglePassword{
+  cursor: pointer;
+  background: rgba(0,0,0,0);
+  border: none;
+  color:var(--white)
+
+}
+
+
