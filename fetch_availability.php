@@ -5,11 +5,6 @@ header('Content-Type: application/json');
 
 require 'config.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
-}
 
 // Get the JSON payload
 $input = json_decode(file_get_contents('php://input'), true);
@@ -48,5 +43,4 @@ if ($result->num_rows > 0) {
 }
 
 $stmt->close();
-$conn->close();
 ?>

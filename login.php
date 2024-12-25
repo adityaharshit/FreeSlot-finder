@@ -3,11 +3,6 @@
 session_start();
 require 'config.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
@@ -28,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["username"] = $row['username'];
         echo "<script>
         alert('Login successfull');
-        window.location.href='dashboard.html';
+        window.location.href='dashboard.php';
         </script>"; 
     } else {
         
@@ -39,6 +34,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>

@@ -11,8 +11,8 @@ session_start();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                 <?php if(isset($_SESSION['username'])): ?>
-                <li class="nav-item"><a class="nav-link" href="logout.php">Add Faculty</a></li>
-                 <li class="nav-item"><a class="nav-link" href="logout.php">Add Course</a></li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+                 <li class="nav-item"><a class="nav-link" href="course.php">Add Course</a></li>
                 <!-- <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li> -->
                 <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                 <?php endif; ?>
