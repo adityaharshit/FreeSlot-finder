@@ -1,113 +1,47 @@
 <?php
-if (isset($_POST['submit'])) {
-    // Get the selected department and semester
-    $department = $_POST['department'];
-    $semester = $_POST['semester'];
-    $sections = $_POST['section'];
 
-    // Check if a file was uploaded
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        $fileTmpPath = $_FILES['file']['tmp_name'];
-        $fileName = $_FILES['file']['name'];
-        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+$path = $_GET['file'];
+// $path = 'timetable/MCA_1_A.csv';
 
-        // Validate file extension
-        if ($fileExtension === 'csv') {
-            // Define the directory and new file name
-            $uploadDir = __DIR__ . '/timetable/';
-            // if $sections is not empty, append it to the filename
-            if ($sections !== 'select') {
-                $newFileName = $department . '_' . $semester . '_' . $sections . '.csv';
-            } else {
-                $newFileName = $department . '_' . $semester . '.csv';
-            }
-            $destPath = $uploadDir . $newFileName;
+delete_data($path);
+delete_file($path);
 
-            // Create the timetable directory if it doesn't exist
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-
-            // check whether file with same name exists or not
-            if (file_exists($destPath)) {
-                echo "<script>
-                alert('File with the same name already exists.');
-                window.location.href='dashboard.php';
-                </script>";
-            } else {
-
-
-                // Move the uploaded file to the destination
-                if (move_uploaded_file($fileTmpPath, $destPath)) {
-                    update_timetable($destPath);
-                    echo "<script>
-                    alert('File uploaded and saved as $newFileName in the timetable directory.');
+echo "<script>
+                    alert('File deleted successfully.');
                     window.location.href='dashboard.php';
                     </script>";
 
-                } else {
-                    echo "<script>
-                alert('There was an error moving the uploaded file.');
-                window.location.href='dashboard.php';
-                </script>";
-                }
-            }
-        } else {
-            echo "<script>
-            alert('Only CSV files are allowed.');
-            window.location.href='dashboard.php';
-            </script>";
-        }
+function delete_file($file)
+{
+    if (!unlink($file)) {
+        echo ("$file cannot be deleted due to an error");
     } else {
-        echo "<script>
-        alert('No file uploaded or there was an error during the upload.');
-        window.location.href='dashboard.php';
-        </script>";
+        echo ("$file has been deleted");
     }
-} else {
-    echo "<script>
-        alert('Invalid request.');
-        window.location.href='dashboard.php';
-        </script>";
 }
 
-
-
-
-
-function update_timetable($path)
+function delete_data($path)
 {
 
-
-    // Database connection
     require 'config.php';
 
 
-    // Path to the uploaded CSV file
-// $csvFile = 'timetable/UPDATED 3 SEM TT .csv'; // Replace with the actual path
-
-    // Open the CSV file
     if (($handle = fopen($path, "r")) !== false) {
         while (!feof($handle)) {
             echo "Processing schedule...<br>";
             // Skip the first rows (header and empty rows)
             while (($row = fgetcsv($handle)) !== false) {
-                echo $row[0];
-                echo "1<br>";
+                // echo $row[0];
                 if (strpos(strToLower(trim($row[0])), 'day') !== false)
                     break;
             }
-            echo "2<br>";
 
             // Read the timetable data (Rows 3-8)
             $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             $schedule = [];
             foreach ($days as $dayIndex => $day) {
                 $row = fgetcsv($handle);
-                // echo $row
-                // echo $row[0];
-                if ($row == false) {
+                if($row == false){
                     break;
                 }
                 $schedule[$day] = array_slice($row, 1); // Skip the "Day" column
@@ -124,7 +58,6 @@ function update_timetable($path)
                 $subject = $row[0];
                 $faculty = $row[2];
                 $email = $row[3];
-                echo $subject, $email;
                 if (empty($subject) && empty($email)) {
                     break;
                 }
@@ -160,12 +93,16 @@ function update_timetable($path)
                 if ($result->num_rows > 0) {
                     // Fetch existing schedule
                     $row = $result->fetch_assoc();
+                    // echo "$email<br>";
                     foreach ($days as $day) {
                         if (!empty($facultySchedule[$day])) {
                             $existing = $row[$day];
                             $newPeriods = explode(',', $facultySchedule[$day]);
+                            // echo '<pre>'; print_r($newPeriods); echo '</pre>';
                             $existingPeriods = $existing ? explode(',', $existing) : [];
-                            $updatedPeriods = array_unique(array_merge($existingPeriods, $newPeriods));
+                            $updatedPeriods = array_diff($existingPeriods, $newPeriods);
+                            // echo '<pre>'; print_r($updatedPeriods); echo '</pre>';
+                            // print_r($existingPeriods);
                             $facultySchedule[$day] = implode(',', $updatedPeriods);
                         } else {
                             $facultySchedule[$day] = $row[$day]; // Keep the existing value
@@ -189,29 +126,11 @@ function update_timetable($path)
                         $email
                     );
                     $updateStmt->execute();
-                    echo "3<br>";
-                } else {
-                    // Insert new row
-                    $insertQuery = "
-                INSERT INTO schedule (email, mon, tue, wed, thu, fri, sat)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    $insertStmt = $conn->prepare($insertQuery);
-                    $insertStmt->bind_param(
-                        "sssssss",
-                        $email,
-                        $facultySchedule['Mon'],
-                        $facultySchedule['Tue'],
-                        $facultySchedule['Wed'],
-                        $facultySchedule['Thu'],
-                        $facultySchedule['Fri'],
-                        $facultySchedule['Sat']
-                    );
-                    $insertStmt->execute();
+                    // echo "3<br>";
                 }
             }
         }
 
-        fclose($handle);
         echo "Schedule processed successfully.";
     } else {
         echo "Failed to open the CSV file.";

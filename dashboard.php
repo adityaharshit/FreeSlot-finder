@@ -58,6 +58,7 @@
             <th>Semester</th>
             <th>File Name</th>
             <th>Download</th>
+            <th>Delete</th>
         </tr>
         <!-- Read the files from the timetable directory and split it to get the department and semester -->
         <?php
@@ -75,6 +76,7 @@
                 <td>$semester</td>
                 <td>$file</td>
                 <td><a href='timetable/$file'>Download</a></td>
+                <td><a href='delete_timetable.php?file=timetable/$file'>Delete</a></td>
             </tr>";
         }
         ?>
