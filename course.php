@@ -40,7 +40,12 @@
     </div>
 
     <!-- Display Existing Courses -->
+    <div class="container">
+
+    
     <h2 class="text-center">Existing Courses</h2>
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -50,7 +55,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id = "courseTable">
             <?php
             // Database connection
             require 'config.php';
@@ -88,6 +93,17 @@
     <script src="js/jquery.counterup.min.js"></script>
     <script src="js/jquery.barfiller.js"></script>
     <script src="js/index.js"></script>
+
+    <script>
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#courseTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    </script>
+
+
 </body>
 
 </html>

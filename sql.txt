@@ -1,0 +1,88 @@
+CREATE TABLE `finder`.`faculties` (`Fid` INT NOT NULL AUTO_INCREMENT , `Name` VARCHAR(50) NOT NULL , `FacultyId` VARCHAR(50) NOT NULL , `Email` VARCHAR(50) NOT NULL , `Department` VARCHAR(50) NOT NULL , PRIMARY KEY (`Fid`)) ENGINE = InnoDB;
+
+CREATE TABLE `finder`.`duties` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid));
+
+CREATE TABLE Log(Lid int primary key AUTO_INCREMENT, Fid int, Duty_date date, Duty_Session varchar(20), FOREIGN KEY(Fid) REFERENCES faculties(Fid));
+
+CREATE TRIGGER `add_faculty_data` AFTER INSERT ON `faculties`
+ FOR EACH ROW Insert into duties(Fid) values(New.Fid)
+
+CREATE TRIGGER `delete_faculty_data` AFTER DELETE ON `faculties`
+ FOR EACH ROW delete from duties where fid = OLD.fid
+
+create table Schedule(Id int primary key AUTO_INCREMENT, Fid int not null, Mon varchar(50), Tue varchar(50), Wed varchar(50),Thu varchar(50),Fri varchar(50),Sat varchar(50), FOREIGN KEY(Fid) REFERENCES faculties(Fid)); 
+
+
+
+-- Create trigger for incrementing duties after insert on log
+ DELIMITER $$
+
+CREATE TRIGGER `Increment_Duties` 
+AFTER INSERT ON `log` 
+FOR EACH ROW
+BEGIN
+    IF MONTH(NEW.Duty_date) = 1 THEN
+        UPDATE duties SET January = January + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 2 THEN
+        UPDATE duties SET February = February + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 3 THEN
+        UPDATE duties SET March = March + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 4 THEN
+        UPDATE duties SET April = April + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 5 THEN
+        UPDATE duties SET May = May + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 6 THEN
+        UPDATE duties SET June = June + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 7 THEN
+        UPDATE duties SET July = July + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 8 THEN
+        UPDATE duties SET August = August + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 9 THEN
+        UPDATE duties SET September = September + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 10 THEN
+        UPDATE duties SET October = October + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 11 THEN
+        UPDATE duties SET November = November + 1 WHERE Fid = NEW.Fid;
+    ELSEIF MONTH(NEW.Duty_date) = 12 THEN
+        UPDATE duties SET December = December + 1 WHERE Fid = NEW.Fid;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+-- Create trigger to reduce value of duties table
+DELIMITER $$
+
+CREATE TRIGGER `Decrement_Duties` 
+AFTER DELETE ON `log` 
+FOR EACH ROW
+BEGIN
+    IF MONTH(OLD.Duty_date) = 1 THEN
+        UPDATE duties SET January = January - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 2 THEN
+        UPDATE duties SET February = February - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 3 THEN
+        UPDATE duties SET March = March - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 4 THEN
+        UPDATE duties SET April = April - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 5 THEN
+        UPDATE duties SET May = May - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 6 THEN
+        UPDATE duties SET June = June - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 7 THEN
+        UPDATE duties SET July = July - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 8 THEN
+        UPDATE duties SET August = August - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 9 THEN
+        UPDATE duties SET September = September - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 10 THEN
+        UPDATE duties SET October = October - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 11 THEN
+        UPDATE duties SET November = November - 1 WHERE Fid = OLD.Fid;
+    ELSEIF MONTH(OLD.Duty_date) = 12 THEN
+        UPDATE duties SET December = December - 1 WHERE Fid = OLD.Fid;
+    END IF;
+END$$
+
+DELIMITER ;

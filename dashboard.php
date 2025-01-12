@@ -15,100 +15,119 @@
     <nav class="navbar navbar-expand-lg">
     </nav>
 
-    <form action="upload_timetable.php" method="post" enctype="multipart/form-data" class="mt-5">
-        <label for="department">Select Department:</label>
-        <select name="department" id="department" required>
-
-            <option value="">-- Select Course --</option>
-            <!-- Courses will be populated here by PHP -->
-            <?php
-            require 'config.php'; // Include database connection
-            $query = "SELECT DISTINCT course FROM courses";
-            $result = $conn->query($query);
-            while ($row = $result->fetch_assoc()) {
-                echo "<option value='{$row['course']}'>{$row['course']}</option>";
-            }
-            ?>
-        </select>
-        <br><br>
-
-        <label for="semester">Select Semester:</label>
-        <select name="semester" id="semester" required>
-            <option value="">-- Select Section --</option>
-        </select>
-        <br><br>
-
-        <label for="section">Select Section:</label>
-        <select name="section" id="section" required>
-            <option value="">-- Select Section --</option>
-        </select>
-        <br><br>
-        <label for="file">Upload CSV File:</label>
-        <input type="file" name="file" id="file" accept=".csv" required>
-        <br><br>
-
-        <button type="submit" name="submit">Save</button>
-    </form>
+    <div class="container">
 
 
-    <h1>Already Uploaded Documents</h1>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Department</th>
-            <th>Semester</th>
-            <th>File Name</th>
-            <th>Download</th>
-            <th>Delete</th>
-        </tr>
-        <!-- Read the files from the timetable directory and split it to get the department and semester -->
-        <?php
-        $timetableDir = __DIR__ . '/timetable/';
-        $files = scandir($timetableDir);
-        foreach ($files as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            $fileParts = explode('_', $file);
-            $department = $fileParts[0];
-            $semester = explode('.', $fileParts[1])[0];
-            echo "<tr>
+        <form action="upload_timetable.php" method="post" enctype="multipart/form-data" class="mt-5">
+            <label for="department" class="form-label">Select Department:</label>
+            <select name="department" id="department" required class="form-control">
+
+                <option value="">-- Select Course --</option>
+                <!-- Courses will be populated here by PHP -->
+                <?php
+                require 'config.php'; // Include database connection
+                $query = "SELECT DISTINCT course FROM courses";
+                $result = $conn->query($query);
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='{$row['course']}'>{$row['course']}</option>";
+                }
+                ?>
+            </select>
+            <br><br>
+
+            <label for="semester" class="form-label">Select Semester:</label>
+            <select name="semester" id="semester" required class="form-control">
+                <option value="">-- Select Section --</option>
+            </select>
+            <br><br>
+
+            <label for="section" class="form-label">Select Section:</label>
+            <select name="section" id="section" required class="form-control">
+                <option value="">-- Select Section --</option>
+            </select>
+            <br><br>
+            <label for="file" class="form-label">Upload CSV File:</label>
+            <input type="file" name="file" id="file" accept=".csv" required class="form-control">
+            <br><br>
+
+            <button type="submit" name="submit" class="btn btn-primary">Save</button>
+        </form>
+
+    </div>
+
+    <div class="container">
+
+
+        <h1>Already Uploaded Documents</h1>
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table class="table table-bordered table-striped">
+            <thead>
+
+                <tr>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>File Name</th>
+                    <th>Download</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <!-- Read the files from the timetable directory and split it to get the department and semester -->
+            <tbody id="scheduleTable"   >
+
+                <?php
+                $timetableDir = __DIR__ . '/timetable/';
+                $files = scandir($timetableDir);
+                foreach ($files as $file) {
+                    if ($file === '.' || $file === '..') {
+                        continue;
+                    }
+                    $fileParts = explode('_', $file);
+                    $department = $fileParts[0];
+                    $semester = explode('.', $fileParts[1])[0];
+                    echo "<tr>
                 <td>$department</td>
                 <td>$semester</td>
                 <td>$file</td>
                 <td><a href='timetable/$file'>Download</a></td>
                 <td><a href='delete_timetable.php?file=timetable/$file'>Delete</a></td>
             </tr>";
-        }
-        ?>
-    </table>
+                }
+                ?>
+            </tbody>
+            </table>
+    </div>
+
+    <div class="container">
+
+        <h1>Check Availability</h1>
+
+        <form id="availability-form">
+            <label for="faculty" class="form-label">Select Faculty:</label>
+            <select name="faculty" id="faculty" required class="form-control">
+                <?php
+                // Connect to the database
+                
+                require 'config.php';
 
 
-    <h1>Check Availability</h1>
+                // Fetch faculty details from the database
+                $query = "Select f.fid, f.name, f.email from faculties f join schedule s on f.fid = s.fid";
+                $result = $conn->query($query);
 
-    <form id="availability-form">
-        <label for="faculty">Select Faculty:</label>
-        <select name="faculty" id="faculty" required>
-            <?php
-            // Connect to the database
-            
-            require 'config.php';
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['fid'] . "'>" . $row['email'] . ' (' . $row['name'] . ')' . "</option>";
+                }
+                ?>
+            </select>
+            <br>
+            <button type="button" id="fetch-details" class="btn btn-primary">Fetch</button>
+            <br>
+            <br>
+        </form>
+    </div>
 
-
-            // Fetch faculty details from the database
-            $query = "SELECT DISTINCT email, CONCAT(SUBSTRING_INDEX(email, '@', 1), '(', email, ')') AS name_email FROM schedule";
-            $result = $conn->query($query);
-
-            while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . $row['email'] . "'>" . $row['name_email'] . "</option>";
-            }
-            ?>
-        </select>
-        <br><br>
-
-        <button type="button" id="fetch-details">Fetch</button>
-    </form>
-
-    <table border="1" id="availability-table" class="table table-bordered table-striped">
+    <table border="1" id="availability-table" class="table table-bordered table-striped container">
         <thead>
             <tr>
                 <th>Day</th>
@@ -135,16 +154,37 @@
     </table>
     <script src="https://code.jquery.com/jquery-3.6.0.js">
     </script>
-    <script>
-        document.getElementById('fetch-details').addEventListener('click', function () {
-            const facultyEmail = document.getElementById('faculty').value;
+    <!-- Footer section -->
+    <div class="custom-footer"></div>
 
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/jquery.waypoints.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <script src="js/jquery.barfiller.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+
+
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#scheduleTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+
+
+        document.getElementById('fetch-details').addEventListener('click', function () {
+            const facultyId = document.getElementById('faculty').value;
+            // console.log(facultyId)
             fetch('fetch_availability.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: facultyEmail }),
+                body: JSON.stringify({ fid: facultyId }),
             })
                 .then(response => response.json())
                 .then(data => {
@@ -169,7 +209,7 @@
                         rowElement.innerHTML = str;
 
                         // Now rowElement is a DOM element
-                        console.log(rowElement);
+                        // console.log(rowElement);
                         // console.log($.parseHTML(str));
                         document.getElementById('table-body').appendChild(rowElement);
                     });
@@ -181,7 +221,6 @@
 
         document.getElementById("department").addEventListener("change", function () {
             const course = this.value;
-
             fetch(`fetch_semesters_sections.php?course=${encodeURIComponent(course)}`)
                 .then(response => response.json())
                 .then(data => {
@@ -220,22 +259,13 @@
         });
 
 
-       
+
 
     </script>
 
 
 
-    <!-- Footer section -->
-    <div class="custom-footer"></div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/jquery.waypoints.js"></script>
-    <script src="js/jquery.counterup.min.js"></script>
-    <script src="js/jquery.barfiller.js"></script>
-    <script src="js/index.js"></script>
 </body>
 
 </html>

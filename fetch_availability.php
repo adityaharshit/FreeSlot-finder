@@ -8,15 +8,14 @@ require 'config.php';
 
 // Get the JSON payload
 $input = json_decode(file_get_contents('php://input'), true);
-$email = $input['email'] ?? '';
-
-if (empty($email)) {
-    echo json_encode(['error' => 'Email is required.']);
+$fid = $input['fid'] ?? '';
+if (empty($fid)) {
+    echo json_encode(['error' => 'fid is required.']);
     exit;
 }
 
 // Fetch availability from the schedule table
-$query = "SELECT mon, tue, wed, thu, fri, sat FROM schedule WHERE email = ?";
+$query = "SELECT mon, tue, wed, thu, fri, sat FROM schedule WHERE fid = ?";
 $stmt = $conn->prepare($query);
 
 if (!$stmt) {
@@ -24,7 +23,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param('s', $email);
+$stmt->bind_param('i', $fid);
 $stmt->execute();
 $result = $stmt->get_result();
 
