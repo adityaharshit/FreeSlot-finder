@@ -1,0 +1,273 @@
+Date,Session,Role,"Faculty ID",Name,Department
+2025-3-1,Morning,Reliever,24,Harshitha,CSE
+2025-3-1,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-1,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-1,Morning,Examiner,6,Poornima,CSE
+2025-3-1,Morning,Examiner,21,Athira,CSE
+2025-3-1,Morning,Examiner,20,"Asha PV",CSE
+2025-3-1,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-1,Morning,Reliever,22,"Chethan M",CSE
+2025-3-1,Morning,Reliever,15,"Preethi B S",CSE
+2025-3-1,Morning,Examiner,29,"Tejas J",CSE
+2025-3-1,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-1,Morning,Examiner,11,Nayanika,CSE
+2025-3-1,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-1,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-3,Morning,Reliever,26,"Priyanka Kamble",CSE
+2025-3-3,Morning,Reliever,24,Harshitha,CSE
+2025-3-3,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-3,Morning,Examiner,14,"Poornima T",CSE
+2025-3-3,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-3,Morning,Examiner,25,Niranjani,CSE
+2025-3-3,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-3,Morning,Reliever,13,Pavithra,CSE
+2025-3-3,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-3,Morning,Examiner,19,Anu,CSE
+2025-3-3,Morning,Examiner,17,Veena,CSE
+2025-3-3,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-3,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-3,Morning,Examiner,12,Pallavi,CSE
+2025-3-4,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-4,Morning,Reliever,22,"Chethan M",CSE
+2025-3-4,Morning,Examiner,21,Athira,CSE
+2025-3-4,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-4,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-4,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-4,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-4,Morning,Reliever,15,"Preethi B S",CSE
+2025-3-4,Morning,Reliever,13,Pavithra,CSE
+2025-3-4,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-4,Morning,Examiner,14,"Poornima T",CSE
+2025-3-4,Morning,Examiner,12,Pallavi,CSE
+2025-3-4,Morning,Examiner,25,Niranjani,CSE
+2025-3-4,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-5,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-5,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-5,Morning,Examiner,10,Meghashree,CSE
+2025-3-5,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-5,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-5,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-5,Morning,Examiner,23,Goutam,CSE
+2025-3-5,Morning,Reliever,24,Harshitha,CSE
+2025-3-5,Morning,Reliever,26,"Priyanka Kamble",CSE
+2025-3-5,Morning,Examiner,10,Meghashree,CSE
+2025-3-5,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-5,Morning,Examiner,29,"Tejas J",CSE
+2025-3-5,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-5,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-6,Morning,Reliever,26,"Priyanka Kamble",CSE
+2025-3-6,Morning,Reliever,22,"Chethan M",CSE
+2025-3-6,Morning,Examiner,27,Reena,CSE
+2025-3-6,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-6,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-6,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-6,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-6,Morning,Reliever,15,"Preethi B S",CSE
+2025-3-6,Morning,Reliever,13,Pavithra,CSE
+2025-3-6,Morning,Examiner,27,Reena,CSE
+2025-3-6,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-6,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-6,Morning,Examiner,23,Goutam,CSE
+2025-3-6,Morning,Examiner,19,Anu,CSE
+2025-3-7,Morning,Reliever,24,Harshitha,CSE
+2025-3-7,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-7,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-7,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-7,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-7,Morning,Examiner,23,Goutam,CSE
+2025-3-7,Morning,Examiner,19,Anu,CSE
+2025-3-7,Morning,Reliever,22,"Chethan M",CSE
+2025-3-7,Morning,Reliever,26,"Priyanka Kamble",CSE
+2025-3-7,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-7,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-7,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-7,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-7,Morning,Examiner,14,"Poornima T",CSE
+2025-3-8,Morning,Reliever,15,"Preethi B S",CSE
+2025-3-8,Morning,Reliever,13,Pavithra,CSE
+2025-3-8,Morning,Examiner,6,Poornima,CSE
+2025-3-8,Morning,Examiner,20,"Asha PV",CSE
+2025-3-8,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-8,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-8,Morning,Examiner,11,Nayanika,CSE
+2025-3-8,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-8,Morning,Reliever,24,Harshitha,CSE
+2025-3-8,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-8,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-8,Morning,Examiner,6,Poornima,CSE
+2025-3-8,Morning,Examiner,21,Athira,CSE
+2025-3-8,Morning,Examiner,20,"Asha PV",CSE
+2025-3-10,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-10,Morning,Reliever,24,Harshitha,CSE
+2025-3-10,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-10,Morning,Examiner,25,Niranjani,CSE
+2025-3-10,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-10,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-10,Morning,Examiner,10,Meghashree,CSE
+2025-3-10,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-10,Morning,Reliever,32,"Vasanth C. Bhagawat",MCA
+2025-3-10,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-10,Morning,Examiner,17,Veena,CSE
+2025-3-10,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-10,Morning,Examiner,12,Pallavi,CSE
+2025-3-10,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-11,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-11,Morning,Reliever,24,Harshitha,CSE
+2025-3-11,Morning,Examiner,21,Athira,CSE
+2025-3-11,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-11,Morning,Examiner,19,Anu,CSE
+2025-3-11,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-11,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-11,Morning,Reliever,34,"Gomathy Prathima E (GP)",MCA
+2025-3-11,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-11,Morning,Examiner,14,"Poornima T",CSE
+2025-3-11,Morning,Examiner,12,Pallavi,CSE
+2025-3-11,Morning,Examiner,25,Niranjani,CSE
+2025-3-11,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-12,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-12,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-12,Morning,Examiner,10,Meghashree,CSE
+2025-3-12,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-12,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-12,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-12,Morning,Examiner,29,"Tejas J",CSE
+2025-3-12,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-12,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-12,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-13,Morning,Examiner,27,Reena,CSE
+2025-3-13,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-13,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-13,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-13,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-13,Morning,Examiner,27,Reena,CSE
+2025-3-13,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-13,Morning,Examiner,17,Veena,CSE
+2025-3-13,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-13,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-14,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-14,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-14,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-14,Morning,Examiner,23,Goutam,CSE
+2025-3-14,Morning,Examiner,19,Anu,CSE
+2025-3-14,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-14,Morning,Examiner,29,"Tejas J",CSE
+2025-3-14,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-14,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-14,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-15,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-15,Morning,Examiner,11,Nayanika,CSE
+2025-3-15,Morning,Examiner,6,Poornima,CSE
+2025-3-15,Morning,Examiner,20,"Asha PV",CSE
+2025-3-15,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-15,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-15,Morning,Examiner,11,Nayanika,CSE
+2025-3-15,Morning,Examiner,6,Poornima,CSE
+2025-3-15,Morning,Examiner,21,Athira,CSE
+2025-3-15,Morning,Examiner,20,"Asha PV",CSE
+2025-3-17,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-17,Morning,Examiner,14,"Poornima T",CSE
+2025-3-17,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-17,Morning,Examiner,25,Niranjani,CSE
+2025-3-17,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-17,Morning,Examiner,17,Veena,CSE
+2025-3-17,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-17,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-17,Morning,Examiner,12,Pallavi,CSE
+2025-3-17,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-18,Morning,Examiner,21,Athira,CSE
+2025-3-18,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-18,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-18,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-18,Morning,Examiner,19,Anu,CSE
+2025-3-18,Morning,Examiner,29,"Tejas J",CSE
+2025-3-18,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-18,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-18,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-18,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-19,Morning,Examiner,10,Meghashree,CSE
+2025-3-19,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-19,Morning,Examiner,23,Goutam,CSE
+2025-3-19,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-19,Morning,Examiner,21,Athira,CSE
+2025-3-19,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-19,Morning,Examiner,29,"Tejas J",CSE
+2025-3-19,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-19,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-19,Morning,Examiner,6,Poornima,CSE
+2025-3-20,Morning,Examiner,27,Reena,CSE
+2025-3-20,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-20,Morning,Examiner,17,Veena,CSE
+2025-3-20,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-20,Morning,Examiner,23,Goutam,CSE
+2025-3-20,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-20,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-20,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-20,Morning,Examiner,14,"Poornima T",CSE
+2025-3-20,Morning,Examiner,12,Pallavi,CSE
+2025-3-21,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-21,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-21,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-21,Morning,Examiner,27,Reena,CSE
+2025-3-21,Morning,Examiner,25,Niranjani,CSE
+2025-3-21,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-21,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-21,Morning,Examiner,29,"Tejas J",CSE
+2025-3-21,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-21,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-22,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-22,Morning,Examiner,11,Nayanika,CSE
+2025-3-22,Morning,Examiner,20,"Asha PV",CSE
+2025-3-22,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-22,Morning,Examiner,6,Poornima,CSE
+2025-3-22,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-22,Morning,Examiner,11,Nayanika,CSE
+2025-3-22,Morning,Examiner,20,"Asha PV",CSE
+2025-3-22,Morning,Examiner,17,Veena,CSE
+2025-3-22,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-24,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-24,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-24,Morning,Examiner,10,Meghashree,CSE
+2025-3-24,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-24,Morning,Examiner,23,Goutam,CSE
+2025-3-24,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-24,Morning,Examiner,19,Anu,CSE
+2025-3-24,Morning,Examiner,17,Veena,CSE
+2025-3-24,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-24,Morning,Examiner,6,Poornima,CSE
+2025-3-25,Morning,Examiner,21,Athira,CSE
+2025-3-25,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-25,Morning,Examiner,11,Nayanika,CSE
+2025-3-25,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-25,Morning,Examiner,20,"Asha PV",CSE
+2025-3-25,Morning,Examiner,38,"Lakshmi G",MCA
+2025-3-25,Morning,Examiner,14,"Poornima T",CSE
+2025-3-25,Morning,Examiner,12,Pallavi,CSE
+2025-3-25,Morning,Examiner,25,Niranjani,CSE
+2025-3-25,Morning,Examiner,8,"Keerhi K S",CSE
+2025-3-26,Morning,Examiner,5,"Mary Angel",CSE
+2025-3-26,Morning,Examiner,1,"Farhana Kausar",CSE
+2025-3-26,Morning,Examiner,10,Meghashree,CSE
+2025-3-26,Morning,Examiner,28,"Tanu Kaushik",CSE
+2025-3-26,Morning,Examiner,4,"Priyanka CM",CSE
+2025-3-26,Morning,Examiner,36,"Apoorva M",MCA
+2025-3-26,Morning,Examiner,37,Pusphavathi,MCA
+2025-3-26,Morning,Examiner,35,"Yaswanth Reddy V.",MCA
+2025-3-26,Morning,Examiner,29,"Tejas J",CSE
+2025-3-26,Morning,Examiner,33,"Jasmine J.C. Shiji (JS)",MCA
+2025-3-27,Morning,Examiner,3,"Devi Kannan",CSE
+2025-3-27,Morning,Examiner,27,Reena,CSE
+2025-3-27,Morning,Examiner,2,"Ravi Kumar",CSE
+2025-3-27,Morning,Examiner,31,"Siddumallapa Bilgundi",MCA
+2025-3-27,Morning,Examiner,16,"Renuka N D",CSE
+2025-3-27,Morning,Examiner,30,"Sravan kumar. T",MCA
+2025-3-27,Morning,Examiner,9,"Mahesh K S",CSE
+2025-3-27,Morning,Examiner,23,Goutam,CSE
+2025-3-27,Morning,Examiner,7,"Chaitra P",CSE
+2025-3-27,Morning,Examiner,19,Anu,CSE
+2025-3-28,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-28,Morning,Examiner,11,Nayanika,CSE
+2025-3-28,Morning,Examiner,6,Poornima,CSE
+2025-3-28,Morning,Examiner,21,Athira,CSE
+2025-3-28,Morning,Examiner,17,Veena,CSE
+2025-3-28,Morning,Examiner,18,"Vijayalakshmi V",CSE
+2025-3-28,Morning,Examiner,20,"Asha PV",CSE

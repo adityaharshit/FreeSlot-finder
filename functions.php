@@ -1,43 +1,220 @@
 <?php
 session_start();
-function getAvailableFaculties($day, $hours, $num, $date)
+require 'config.php';
+
+function getFaculties($day, $session, $num, $date)
 {
-    global $conn; // Database connection
-    $hoursStr = implode(',', $hours);
+    global $conn, $limit; // Database connection
+    $hours = $session === 'morning' ? [1, 2, 4, 5] : [7, 8, 9, 10];
+    
     $month = date('F', strtotime($date));
     $month = strtolower($month);
-    $_SESSION['fetched_faculty'] = array();
-    $_SESSION['limit'] = 0;
-    $_SESSION['fetched_faculty_less_hours'] = array();
-    $_SESSION['limit_extra'] = 0;
-    echo "<script>console.log('$month')</script>";
-    echo "<script>console.log('$day')</script>";
+
+
+    // Get average
+    $query = "SELECT ceil(avg($month)) as avg from duties";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $limit = $stmt->get_result()->fetch_assoc()['avg'];
+
+
+    // Check is we have enough faculties or not
+    $query = "SELECT count(*) as count from duties d inner join faculties f on d.fid = f.fid 
+        where d.$month<=$limit and f.designation in ('Assistant Professor', 'Associate Professor')";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $count = $stmt->get_result()->fetch_assoc()['count'];
+
+    if($count<$num) $limit = $limit+3;
     $query = "
-        SELECT f.fid, f.name, f.department, d.$month
-        FROM faculties f
-        JOIN duties d ON f.fid = d.fid 
-        WHERE f.fid NOT IN (
-            SELECT fid
-            FROM schedule
-            WHERE $day IN ($hoursStr)
-        )
-        ORDER BY d.$month ASC
+        SELECT
+        f.Fid, f.name, f.department,f.YearsOfExperience, d.$month,
+        s.$day,
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[0]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[1]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[2]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[3]', '')) > 0) AS MatchCount
+        FROM faculties f JOIN duties d ON f.fid = d.fid 
+        JOIN schedule s on f.fid = s.fid where d.$month < $limit and 
+        f.designation not in ('HOD', 'Professor') and f.fid not in 
+        (select fid from Log where Duty_date = '$date' and Role = 'Reliever' 
+        and Duty_Session = '$session') and d.$month <= $limit 
+        order by MatchCount ASC, f.Designation ASC, d.$month ASC, f.YearsOfExperience ASC limit $num;
     ";
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    if (count($fetched_faculty) < $num) {
-        // echo $num-count($fetched_faculty);
-        getAvailableFacultiesWithLessHours($day, $hours, $num - count($fetched_faculty), $date);
-    }
-    $_SESSION['fetched_faculty'] = $fetched_faculty;
-    $_SESSION['limit'] = $num;
+    return $fetched_faculty;
+}
+function getRelievers($day, $session, $num, $date)
+{
+    global $conn, $limit; // Database connection
+    $hours = $session === 'morning' ? [1, 2, 4, 5] : [7, 8, 9, 10];
+    $month = date('F', strtotime($date));
+    $month = strtolower($month);
+
+    // Get average
+    $query = "SELECT ceil(avg($month)) as avg from duties d inner join faculties f on d.fid = f.fid where f.designation in ('Associate Professor', 'Professor')";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $limit = $stmt->get_result()->fetch_assoc()['avg'];
+
+
+    // Check is we have enough faculties or not
+    $query = "SELECT count(*) as count from duties d inner join faculties f on d.fid = f.fid where d.$month<=$limit and f.designation in ('Professor', 'Associate Professor')";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $count = $stmt->get_result()->fetch_assoc()['count'];
+
+    if($count<$num) $limit = $limit+3;
+    $query = "
+        SELECT f.Fid, f.name, f.department,f.YearsOfExperience,f.Designation, d.$month, s.$day, 
+        ifnull((LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[0]', '')) > 0) + 
+        (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[1]', '')) > 0) + 
+        (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[2]', '')) > 0) + 
+        (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[3]', '')) > 0),0) AS MatchCount 
+        FROM faculties f JOIN duties d ON f.fid = d.fid 
+        JOIN schedule s on f.fid = s.fid 
+        where d.$month < 20 and f.designation in ('Professor', 'Associate Professor') and 
+        d.$month <= $limit order by MatchCount ASC, f.Designation DESC, d.$month ASC, 
+        f.YearsOfExperience DESC limit $num;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     return $fetched_faculty;
 }
 
+
+function logFacultiesToCSV($file, $faculties, $date, $session, $role) {
+    foreach ($faculties as $faculty) {
+        fputcsv($file, [$date, $session, $role, $faculty['Fid'], $faculty['name'], $faculty['department']]);
+    }
+}
+
+
+function generateTableRows($faculties, $session, $role) {
+    $rows = "";
+    foreach ($faculties as $faculty) {
+        $rows .= "<tr>
+                    <td>{$faculty['Fid']}</td>
+                    <td>{$faculty['name']}</td>
+                    <td>{$faculty['department']}</td>
+                    <td>{$session}</td>
+                    <td>{$role}</td>
+                </tr>";
+    }
+    return $rows;
+}
+
+
+function getFacultyDetails($staffID){
+    global $conn;
+    $query = "SELECT f.StaffID, f.name, f.department, f.email, f.designation, d.January, d.February, d.March, d.April, d.May, d.June, d.July, d.August, d.September, d.October, d.November, d.December from faculties f join duties d on f.fid = d.fid where f.StaffID = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $staffID);
+    $stmt->execute();
+    $faculties = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $rows = "";
+    foreach ($faculties as $faculty) {
+        $rows .= "<tr>
+                    <th>StaffID</th>
+                    <td>{$faculty['StaffID']}</td>
+                </tr>";
+        $rows .= "<tr>
+                    <th>Name</th>
+                    <td>{$faculty['name']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>Department</th>
+                    <td>{$faculty['department']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>Email</th>
+                    <td>{$faculty['email']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>Designation</th>
+                    <td>{$faculty['designation']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>January</th>
+                    <td>{$faculty['January']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>February</th>
+                    <td>{$faculty['February']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>March</th>
+                    <td>{$faculty['March']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>April</th>
+                    <td>{$faculty['April']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>May</th>
+                    <td>{$faculty['May']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>June</th>
+                    <td>{$faculty['June']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>July</th>
+                    <td>{$faculty['July']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>August</th>
+                    <td>{$faculty['August']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>September</th>
+                    <td>{$faculty['September']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>October</th>
+                    <td>{$faculty['October']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>November</th>
+                    <td>{$faculty['November']}</td>
+                </tr>";
+        $rows.= "<tr>
+                    <th>December</th>
+                    <td>{$faculty['December']}</td>
+                </tr>";
+
+    }
+    return $rows;
+}
+
+
+function getSchedule($date){
+    global $conn;
+    $query = "SELECT f.fid,f.StaffID, f.name, f.department, l.role, l.Duty_Session from log l inner join faculties f on l.fid = f.fid where l.Duty_date = ? order by l.Duty_Session desc, role desc";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $date);
+    $stmt->execute();
+    $faculties = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $rows = "";
+    foreach ($faculties as $faculty) {
+        $rows .= "<tr>
+                    <td>{$faculty['StaffID']}</td>
+                    <td>{$faculty['name']}</td>
+                    <td>{$faculty['department']}</td>
+                    <td>{$faculty['Duty_Session']}</td>
+                    <td>{$faculty['role']}</td>
+                </tr>";
+    }
+    return $rows;
+}
+
+
 function getAvailableFacultiesWithLessHours($day, $hours, $num, $date)
 {
-    global $conn; // Database connection
+    global $conn, $limit; // Database connection
     $hoursStr = implode(',', $hours);
     $month = date('F', strtotime($date));
     $month = strtolower($month);
@@ -63,21 +240,14 @@ function getAvailableFacultiesWithLessHours($day, $hours, $num, $date)
             SELECT fid
             FROM schedule
             WHERE ($day not IN ($hour[0]) OR $day not IN ($hour[1]) OR $day  not IN ($hour[2]) OR $day not IN ($hour[3])) and $day IN ($hoursStr)
-        )
-        ORDER BY d.$month ASC
+        )and d.$month < $limit
+        ORDER BY d.$month ASC, f.JoiningDate DESC
     ";
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $_SESSION['fetched_faculty_less_hours'] = $fetched_faculty;
     $_SESSION['extra_limit'] = $num;
-    // print value of fetched_faculty in a formatted manner
-    // foreach ($fetched_faculty as $index => $faculty) {
-    //     echo "Index $index: ";
-    //     print_r($faculty);
-    //     echo "<br>";
-    // }
-    // echo $num;  
     return $fetched_faculty;
 }
 
@@ -169,11 +339,11 @@ function renderDuties($duty_date, $duty_session)
     $stmt->bind_param("ss", $duty_date, $duty_session);
     $stmt->execute();
     $faculties = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    
+
     if (empty($faculties)) {
         return "<h2 class='mt-5'>No faculties assigned duty for that day</h2>";
     }
-    
+
     // Build the HTML output
     $html = "<h2 class='mt-5'>Faculties assigned duty for that day</h2>";
     $html .= "<table border='1' class='table table-bordered table-striped mt-3 faculty-table-extra'>
@@ -206,33 +376,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['functionname'])) {
 }
 
 
+function acceptFaculties($faculties, $date, $session, $role)
+{
+    global $conn;
+    $month = date('F', strtotime($date)); // Get the month from the date
+
+    foreach ($faculties as $fid => $faculty) {
+        // Insert into the log table
+        $logQuery = "INSERT INTO log (fid, Duty_date, Duty_Session, Role) VALUES (?, ?, ?, ?)";
+        $logStmt = $conn->prepare($logQuery);
+        $logStmt->bind_param("isss", $faculty['Fid'], $date, $session, $role);
+        $logStmt->execute();
+    }
+}
 
 
+function getDaysInMonth($month)
+{
+    $year = date("Y"); // Assuming the current year
+    $monthNumber = date("n", strtotime($month)); // Convert month name to numeric
+    return cal_days_in_month(CAL_GREGORIAN, $monthNumber, $year);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Function to check if a given day is Sunday
+function isSunday($year, $month, $day)
+{
+    return date('N', strtotime("$year-$month-$day")) == 7; // Sunday corresponds to '7'
+}
 
 
 
@@ -373,5 +543,63 @@ function delete_data($path)
     } else {
         echo "Failed to open the CSV file.";
     }
+}
+function get_departments()
+{
+    global $conn;
+    $query = "SELECT DISTINCT Department FROM faculties";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $departments = [];
+    while ($row = $result->fetch_assoc()) {
+        $departments[] = $row['Department'];
+    }
+    return $departments;
+}
+
+function getFacultiesForCIE($day, $session, $num, $date, $departments)
+{
+    global $conn, $limit; // Database connection
+    $hours = $session === 'morning' ? [1, 2, 4, 5] : [7, 8, 9, 10];
+    
+    $month = date('F', strtotime($date));
+    $month = strtolower($month);
+
+
+    // Get average
+    $query = "SELECT ceil(avg($month)) as avg from duties";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $limit = $stmt->get_result()->fetch_assoc()['avg'];
+
+
+    // Check is we have enough faculties or not
+    $query = "SELECT count(*) as count from duties d inner join faculties f on d.fid = f.fid 
+        where d.$month<=$limit and f.designation in ('Assistant Professor', 'Associate Professor')";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $count = $stmt->get_result()->fetch_assoc()['count'];
+
+    if($count<$num) $limit = $limit+3;
+    $query = "
+        SELECT
+        f.Fid, f.name, f.department,f.YearsOfExperience, d.$month,
+        s.$day,
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[0]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[1]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[2]', '')) > 0) +
+        (LENGTH($day) - LENGTH(REPLACE($day, '$hours[3]', '')) > 0) AS MatchCount
+        FROM faculties f JOIN duties d ON f.fid = d.fid 
+        JOIN schedule s on f.fid = s.fid where and f.Department not in $departments
+        f.designation not in ('HOD', 'Professor')  and f.fid not in 
+        (select fid from Log where Duty_date = '$date' and Role = 'Reliever' 
+        and Duty_Session = '$session') and d.$month <= $limit 
+        order by MatchCount ASC, f.Designation ASC, d.$month ASC, f.YearsOfExperience ASC limit $num;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    return $fetched_faculty;
 }
 ?>

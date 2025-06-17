@@ -18,26 +18,46 @@
     <div class="container mt-5">
         <h1>Add Faculty</h1>
         <form action="add_faculty.php" method="post">
-            <div class="mb-3">
+            
+            <div class="mb-2">
                 <label for="name" class="form-label">Faculty Name</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Enter faculty name" required>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="facultyid" class="form-label">FacultyId</label>
                 <input type="text" class="form-control" id="facultyid" name="facultyid" placeholder="Enter faculty id"
                     required>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="email" class="form-label">Email</label>
                 <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" required>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="department" class="form-label">Department</label>
-                <input type="text" class="form-control" id="department" name="department" placeholder="Enter Department"
-                    required>
+                <input type="text" class="form-control" id="department" name="department" placeholder="Enter Department" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="designation" class="form-label">Designation</label>
+                <input type="select" class="form-control" id="designation" name="designation" placeholder="Select Designation" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="yearsOfExperience" class="form-label">Experience(in yrs)</label>
+                <input type="number" class="form-control" id="yearsOfExperience" name="yearsOfExperience" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="caderValue" class="form-label">Cader Value</label>
+                <input type="number" class="form-control" id="caderValue" name="caderValue" required>
+            </div>
+
+            <div class="mb-2">
+                <label for="contactNumber" class="form-label">Contact Number</label>
+                <input type="number" class="form-control" id="contactNumber" name="contactNumber" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Add Details</button>
@@ -50,6 +70,7 @@
             <input type="file" name="faculty_csv" class="form-control" id="faculty_csv" accept=".csv" required>
             <br>
             <button type="submit" class="btn btn-primary">Upload</button>
+            <a href="format/FacultyDetailFormat.csv" class = "btn btn-primary">Download Format</a>
         </form>
     </div>
 
@@ -67,10 +88,12 @@
                     <th>Name</th>
                     <th>Department</th>
                     <th>Email</th>
+                    <th>Designation</th>
+                    <th>Experience</th>
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id = "facultyTable">
+            <tbody id="facultyTable">
                 <?php
                 // Database connection
                 require 'config.php';
@@ -86,13 +109,15 @@
                         echo "<td>" . htmlspecialchars($row['Name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Department']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Email']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Designation']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['YearsOfExperience']) . "</td>";
                         echo "<td>";
                         echo "<a href='delete_faculty.php?id=" . $row['Fid'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Are you sure you want to delete this faculty detail?\");'>Delete</a>";
                         echo "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4' class='text-center'>No courses found</td></tr>";
+                    echo "<tr><td colspan='4' class='text-center'>No faculties found</td></tr>";
                 }
                 ?>
             </tbody>
@@ -100,7 +125,7 @@
     </div>
 
 
-    
+
 
 
     <div class="custom-footer"></div>

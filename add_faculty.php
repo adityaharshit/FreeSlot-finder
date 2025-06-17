@@ -9,11 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $facultyid = $_POST['facultyid'];
     $email = $_POST['email'];
     $department = $_POST['department'];
-    echo $name,'', $facultyid,'', $email,'',$department;
-    // Insert the data into the 'courses' table
-    $stmt = $conn->prepare("INSERT INTO faculties (Name, StaffId, Email, Department) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $name, $facultyid, $email, $department);
-
+    $designation = $_POST['designation'];
+    $joiningDate = $_POST['joiningDate'];
+    $stmt = $conn->prepare("INSERT INTO faculties (Name, StaffId, Email, Department, Designation, JoiningDate) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $name, $facultyid, $email, $department, $designation, $joiningDate);
     if ($stmt->execute()) {
         echo "<script>alert('Faculty added successfully'); window.location.href= 'faculty.php';</script>";
         

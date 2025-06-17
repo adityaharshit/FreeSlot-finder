@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Paris</title>
+    <title>Finder</title>
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -51,6 +51,9 @@
             <br><br>
 
             <button type="submit" name="submit" class="btn btn-primary">Save</button>
+            <a href="format/TimeTableFormat.csv" class = "btn btn-primary">Download Format</a>
+
+            
         </form>
 
     </div>
@@ -96,6 +99,16 @@
                 ?>
             </tbody>
             </table>
+    </div>
+
+    <div class="container mt-5">
+        <h1>CIE Duty Allocation</h1>
+        <a href="schedule_cie.php" class="btn btn-primary">Schedule CIE Duties</a>
+    </div>
+
+    <div class="container mt-5">
+        <h1>Faculty Duty Details</h1>
+        <a href="faculty_duties.php" class="btn btn-primary">View Faculty Duties</a>
     </div>
 
     <div class="container">

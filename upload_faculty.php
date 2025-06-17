@@ -20,21 +20,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $name = trim($row[1]);
                 $department = trim($row[2]);
                 $email = trim($row[3]);
-
+                $designation = trim($row[4]);
+                $yearsOfExperience = trim($row[5]);
+                $caderRatio = trim($row[6]);
+                $contactNumber = trim($row[7]);
                 // Skip rows with missing essential data
-                if (empty($staffid) || empty($name) || empty($email) || empty($department)) {
+                if (empty($staffid) || empty($name) || empty($email) || empty($department) || empty($designation) || empty($yearsOfExperience) || empty($caderRatio) || empty($contactNumber)) {
                     continue;
                 }
-
-                // Insert into the faculties table
-                $query = "INSERT INTO faculties (name, staffid, email, department) VALUES (?, ?, ?, ?)";
+                $query = "Select * from faculties where StaffId = ? or Email = ?";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param("ssss", $name, $staffid, $email, $department);
+                $stmt->bind_param('ss', $staffid, $email);
                 $stmt->execute();
-            }
+                $result = $stmt->get_result();
 
+                if ($result->num_rows <= 0) {
+                    // Faculty does not exist, proceed with insertion
+                    // Insert into the faculties table
+                    $query = "INSERT INTO faculties (Name, StaffId, Email, Department, Designation, YearsOfExperience, CaderRatio, ContactNumber) VALUES (?, ?,?,?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("sssssiis", $name, $staffid, $email, $department, $designation, $yearsOfExperience, $caderRatio, $contactNumber);
+                    if ($stmt->execute()) {
+
+                    } else {
+                        echo $staffid, $name, $department, $email, $designation, $joiningDate;
+                        $flag = True;
+                        break;
+                    }
+                }
+            }
             fclose($handle);
-            echo "<script>alert('Faculty details uploaded successfully');window.location.href = 'faculty.php'</script>";
+            if ($flag) {
+                echo "<script>alert('Encountered some error');</script>";
+            } else {
+                echo "<script>alert('Faculty Details Updated Successfully');window.location.href = 'faculty.php'</script>";
+
+            }
         } else {
             echo "Failed to open the CSV file.";
         }

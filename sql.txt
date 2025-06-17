@@ -1,8 +1,10 @@
-CREATE TABLE `finder`.`faculties` (`Fid` INT NOT NULL AUTO_INCREMENT , `Name` VARCHAR(50) NOT NULL , `FacultyId` VARCHAR(50) NOT NULL , `Email` VARCHAR(50) NOT NULL , `Department` VARCHAR(50) NOT NULL , PRIMARY KEY (`Fid`)) ENGINE = InnoDB;
+CREATE TABLE `finder`.`faculties` (`Fid` INT NOT NULL AUTO_INCREMENT , `Name` VARCHAR(50) NOT NULL , `FacultyId` VARCHAR(50) NOT NULL , `Email` VARCHAR(50) NOT NULL , `Department` VARCHAR(50) NOT NULL , `Designation` Varchar(50), `JoiningDate` Date, PRIMARY KEY (`Fid`)) ENGINE = InnoDB;
 
 CREATE TABLE `finder`.`duties` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid));
 
 CREATE TABLE Log(Lid int primary key AUTO_INCREMENT, Fid int, Duty_date date, Duty_Session varchar(20), FOREIGN KEY(Fid) REFERENCES faculties(Fid));
+
+create table Schedule(Id int primary key AUTO_INCREMENT, Fid int not null, Mon varchar(50), Tue varchar(50), Wed varchar(50),Thu varchar(50),Fri varchar(50),Sat varchar(50), FOREIGN KEY(Fid) REFERENCES faculties(Fid)); 
 
 CREATE TRIGGER `add_faculty_data` AFTER INSERT ON `faculties`
  FOR EACH ROW Insert into duties(Fid) values(New.Fid)
@@ -10,8 +12,7 @@ CREATE TRIGGER `add_faculty_data` AFTER INSERT ON `faculties`
 CREATE TRIGGER `delete_faculty_data` AFTER DELETE ON `faculties`
  FOR EACH ROW delete from duties where fid = OLD.fid
 
-create table Schedule(Id int primary key AUTO_INCREMENT, Fid int not null, Mon varchar(50), Tue varchar(50), Wed varchar(50),Thu varchar(50),Fri varchar(50),Sat varchar(50), FOREIGN KEY(Fid) REFERENCES faculties(Fid)); 
-
+CREATE TRIGGER `insert_schedule` AFTER INSERT ON `faculties` FOR EACH ROW Insert into schedule(Fid) VALUES(New.Fid);
 
 
 -- Create trigger for incrementing duties after insert on log
@@ -86,3 +87,30 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+
+
+
+-- event for auto updating years of YearsOfExperience
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT update_experience_yearly
+ON SCHEDULE EVERY 1 YEAR
+STARTS TIMESTAMP(CONCAT(YEAR(CURDATE()) + 1, '-01-01 00:00:00'))
+DO
+UPDATE faculties 
+SET yearsofexperience = yearsofexperience + 1;
+
+
+
+
+SELECT
+        f.Fid, f.name, f.department,f.YearsOfExperience,f.Designation, d.January,
+        s.Wed,
+        (LENGTH(s.Wed) - LENGTH(REPLACE(s.Wed, '1', '')) > 0) +
+        (LENGTH(s.Wed) - LENGTH(REPLACE(s.Wed, '2', '')) > 0) +
+        (LENGTH(s.Wed) - LENGTH(REPLACE(s.Wed, '4', '')) > 0) +
+        (LENGTH(s.Wed) - LENGTH(REPLACE(s.Wed, '5', '')) > 0) AS MatchCount
+        FROM faculties f JOIN duties d ON f.fid = d.fid 
+        JOIN schedule s on f.fid = s.fid where d.January < 20 and f.designation <> 'HOD' and d.January <= (select avg(January) from duties) order by MatchCount ASC, d.January ASC, f.Designation DESC limit 15;
