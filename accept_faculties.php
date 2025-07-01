@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($selectedFaculties as $fid) {
         // Insert into the log table
-        $logQuery = "INSERT INTO log (fid, Duty_date, Duty_Session) VALUES (?, ?, ?)";
+        $logQuery = "INSERT INTO log (fid, Duty_date, Duty_Session, Role) VALUES (?, ?, ?, 'Examiner')";
         $logStmt = $conn->prepare($logQuery);
         $logStmt->bind_param("iss", $fid, $date, $session);
         $logStmt->execute();

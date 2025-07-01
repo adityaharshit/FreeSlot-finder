@@ -32,9 +32,28 @@ include 'functions.php';
 $month = $_POST['month']; // Selected month
 $year = date("Y"); // Assuming the current year
 $daysInMonth = getDaysInMonth($month);
-
+$m = date("n");
 $data = [];
 $monthNumber = date("n", strtotime($month)); // Convert month name to numeric
+
+if ($m > $monthNumber) {
+    $year = $year + 1;
+} else{
+    $res = checkIfAlreadyScheduled($year, $monthNumber);
+    if ($res) {
+        echo "<script>
+            if (confirm('Schedule already exists for this month. Do you want to override it?')) {
+                // User chose to override — continue execution
+            } else {
+                // User cancelled — redirect
+                window.location.href = 'schedule_all.php';
+            }
+        </script>";
+        clearData($year, $monthNumber);
+        // Stop further PHP execution until user responds
+    }
+}
+
 
 // Traverse each day of the month
 for ($day = 1; $day <= $daysInMonth; $day++) {

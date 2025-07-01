@@ -9,12 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-        }
-
+        
         .table-container {
             margin-bottom: 30px;
             background: white;
@@ -55,7 +50,15 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Fetch Schedule Details</h1>
+        <div class="row">
+            <div class="col-6">
+                <h1>Fetch Schedule Details</h1>
+            </div>
+            <div class="col-6 text-end">
+                <a class="btn btn-primary" type="button" href="faculty_duties.php">Fetch Faculty Details</a>
+            </div>
+
+        </div>
         <form action="" method="post">
             <div class="mb-3">
                 <label for="month" class="form-label">Select Month:</label>
@@ -74,18 +77,20 @@
                     <option value="December">December</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" name="fetchSchedule" id="fetchSchedule">Fetch Details</button>
-        </form>
-    </div>
-
-    <div class="container mt-5">
-        <h1>Fetch Faculty Details</h1>
-        <form action="" method="post">
             <div class="mb-3">
-                <label for="StaffID" class="form-label">Enter StaffId:</label>
-                <input type="text" class="form-control" id="StaffID" name="staffID">
+                <label for="year" class="form-label">Select year:</label>
+                <select id="year" class="form-select" name="year">
+                    <option value="">--Select Year--</option>
+                </select>
             </div>
-            <button type="submit" class="btn btn-primary" name="fetchFaculty" id="fetchFaculty">Fetch Details</button>
+            <div class="mb-3">
+                <label for="type" class="form-label">Select Type:</label>
+                <select id="type" class="form-select" name="type">
+                    <option value="cie">CIE</option>
+                    <option value="see">SEE</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" name="fetchSchedule" id="fetchSchedule">Fetch Details</button>
         </form>
     </div>
 
@@ -102,9 +107,9 @@
 
             // Get the submitted data
             $month = $_POST['month']; // Selected month
-            $year = date("Y"); // Assuming the current year
+            $year = $_POST['year']; 
             $daysInMonth = getDaysInMonth($month);
-
+            $type = $_POST['type'];
             $data = [];
             $monthNumber = date("n", strtotime($month)); // Convert month name to numeric
         
@@ -120,9 +125,10 @@
                 // Process morning and afternoon values for the day
                 $morningKey = $day . '-morning';
                 $afternoonKey = $day . '-afternoon';
-
-                $tableContent = getSchedule($date);
-
+                if($type=='cie')
+                    $tableContent = getScheduleCie($date);
+                else
+                    $tableContent = getSchedule($date);
                 if (!empty($tableContent)) {
                     echo "<div class='table-container'>";
                     echo "<h2>Schedule for $date</h2>";
@@ -136,23 +142,23 @@
             // echo "</table>";
         }
 
-        if (isset($_POST['fetchFaculty'])) {
-            $staffID = $_POST['staffID'];
-            $facultyDetails = getFacultyDetails($staffID);
-            if (!empty($facultyDetails)) {
-                echo "<div class='table-container'>";
-                echo "<h2>Faculty Details</h2>";
-                echo "<table>";
-                echo $facultyDetails;
-                echo "</table>";
-                echo "</div>";
-            }
-        }
-
         ?>
     </div>
 
 
+
+    <script>
+        const startYear = 2025;
+        const endYear = new Date().getFullYear() + 1; // current year
+        const select = document.getElementById('year');
+
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            select.appendChild(option);
+        }
+    </script>
 
     <div class="custom-footer"></div>
     <script src="js/bootstrap.min.js"></script>
@@ -164,6 +170,7 @@
     <script src="js/jquery.counterup.min.js"></script>
     <script src="js/jquery.barfiller.js"></script>
     <script src="js/index.js"></script>
+
 
 
 

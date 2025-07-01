@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finder</title>
+
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 </head>
 
 <body>
@@ -101,15 +103,6 @@
             </table>
     </div>
 
-    <div class="container mt-5">
-        <h1>CIE Duty Allocation</h1>
-        <a href="schedule_cie.php" class="btn btn-primary">Schedule CIE Duties</a>
-    </div>
-
-    <div class="container mt-5">
-        <h1>Faculty Duty Details</h1>
-        <a href="faculty_duties.php" class="btn btn-primary">View Faculty Duties</a>
-    </div>
 
     <div class="container">
 

@@ -17,6 +17,7 @@ $query = "SELECT f.fid, f.StaffID, f.name, f.department, f.email,
           FROM faculties f
           inner JOIN log l ON f.fid = l.fid  
           AND l.Duty_date BETWEEN ? AND ?
+          AND l.ExamType = 'CIE'
           ORDER BY f.name, l.Duty_date, 
             CASE l.Duty_Session 
                 WHEN 'morning' THEN 1 

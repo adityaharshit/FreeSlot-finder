@@ -50,7 +50,7 @@
                 if (!empty($morningData)) {
                     $dayOfWeek = substr(date('l', strtotime($date)), 0, 3);
                     $faculties = getFacultiesForCIE($dayOfWeek, 'morning', $morningData, $date, $departments);
-                    acceptFaculties($faculties, $date, 'morning', 'Examiner');
+                    acceptFacultiesCIE($faculties, $date, 'morning', 'Examiner');
 
                     flush(); // Ensure all output is sent to the browser
                     ob_flush(); // Flush the output buffer
@@ -60,7 +60,7 @@
                     
                     $dayOfWeek = substr(date('l', strtotime($date)), 0, 3);
                     $faculties = getFacultiesForCIE($dayOfWeek, 'afternoon', $afternoonData, $date, $departments);
-                    acceptFaculties($faculties, $date, 'afternoon', 'Examiner');
+                    acceptFacultiesCIE($faculties, $date, 'afternoon', 'Examiner');
 
                     flush(); // Ensure all output is sent to the browser
                     ob_flush(); // Flush the output buffer
@@ -83,7 +83,7 @@
                 $morningKey = $day . '-morning';
                 $afternoonKey = $day . '-afternoon';
 
-                $tableContent = getSchedule($date);
+                $tableContent = getScheduleCie($date);
 
                 if (!empty($tableContent)) {
                     echo "<div class='table-container'>";
@@ -98,7 +98,7 @@
 
 
             echo '<div class="text-center mt-4">';
-            echo '<form method="post" action="export_faculty_duties.php">';
+            echo '<form method="post" action="export_faculty_duties_cie.php">';
             echo '<input type="hidden" name="month" value="' . $month . '">';
             echo '<input type="hidden" name="year" value="' . $year . '">';
             echo '<button type="submit" class="btn btn-success">Download Faculty Duty Report</button>';
