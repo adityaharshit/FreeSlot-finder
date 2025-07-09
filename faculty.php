@@ -21,25 +21,25 @@
             <div class="row mb-2">
                 <div class="col-md-6">
                     <label for="name" class="form-label">Faculty Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter faculty name"
+                    <input type="text" class="form-control" id="name" name="name" placeholder="E.g., John Doe"
                         required>
                 </div>
                 <div class="col-md-6">
                     <label for="facultyid" class="form-label">FacultyId</label>
                     <input type="text" class="form-control" id="facultyid" name="facultyid"
-                        placeholder="Enter faculty id" required>
+                        placeholder="E.g., ATR001" required>
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" required>
+                    <input type="text" class="form-control" id="email" name="email" placeholder="E.g., abc@xyz.com" required>
                 </div>
                 <div class="col-md-6">
                     <label for="department" class="form-label">Department</label>
                     <input type="text" class="form-control" id="department" name="department"
-                        placeholder="Enter Department" required>
+                        placeholder="E.g., CSE" required>
                 </div>
             </div>
 
@@ -47,22 +47,22 @@
                 <div class="col-md-6">
                     <label for="designation" class="form-label">Designation</label>
                     <input type="text" class="form-control" id="designation" name="designation"
-                        placeholder="Enter Designation" required>
+                        placeholder="E.g., Professor" required>
                 </div>
                 <div class="col-md-6">
                     <label for="yearsOfExperience" class="form-label">Experience (in yrs)</label>
-                    <input type="number" class="form-control" id="yearsOfExperience" name="yearsOfExperience" required>
+                    <input type="number" class="form-control" id="yearsOfExperience" name="yearsOfExperience" placeholder="E.g., 12" required>
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-md-6">
                     <label for="caderValue" class="form-label">Cader Value</label>
-                    <input type="number" class="form-control" id="caderValue" name="caderValue" required>
+                    <input type="number" class="form-control" id="caderValue" name="caderValue" placeholder="E.g., 8" required>
                 </div>
                 <div class="col-md-6">
                     <label for="contactNumber" class="form-label">Contact Number</label>
-                    <input type="number" class="form-control" id="contactNumber" name="contactNumber" required>
+                    <input type="number" class="form-control" id="contactNumber" name="contactNumber" placeholder="E.g., 1236547890" required>
                 </div>
             </div>
 
