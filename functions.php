@@ -1,6 +1,59 @@
 <?php
 session_start();
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 require 'config.php';
+
+function sendDutyEmail($facultyDuties, $examType) {
+    $mail = new PHPMailer(true);
+    global $smtpUsername, $smtpPassword, $addAddress;
+    try {
+        set_time_limit(0);
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtpUsername; // SMTP username
+        $mail->Password = $smtpPassword; // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        //Recipients
+        $mail->setFrom($addAddress, 'Exam Duty Manager');
+
+        foreach ($facultyDuties as $faculty) {
+            if (empty($faculty['duties'])) {
+                continue;
+            }
+
+            $mail->addAddress($faculty['email'], $faculty['name']);
+
+            $body = "Dear " . $faculty['name'] . ",<br><br>";
+            $body .= "You have been assigned the following examination duties for the upcoming " . $examType . " exams:<br><br>";
+            $body .= "<ul>";
+
+            foreach ($faculty['duties'] as $duty) {
+                $body .= "<li>" . $duty . "</li>";
+            }
+
+            $body .= "</ul>";
+            $body .= "<br>Thank you,<br>Exam Cell";
+
+            $mail->isHTML(true);
+            $mail->Subject = $examType . ' Examination Duty Allocation';
+            $mail->Body    = $body;
+
+            $mail->send();
+            $mail->clearAddresses();
+        }
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+}
 
 function getFaculties($day, $session, $num, $date)
 {
@@ -28,7 +81,7 @@ function getFaculties($day, $session, $num, $date)
         $limit = $limit + 3;
     $query = "
         SELECT
-        f.Fid, f.name, f.department,f.YearsOfExperience, d.$month,
+        f.Fid, f.name, f.department,f.YearsOfExperience, f.email, d.$month,
         s.$day,
         (LENGTH($day) - LENGTH(REPLACE($day, '$hours[0]', '')) > 0) +
         (LENGTH($day) - LENGTH(REPLACE($day, '$hours[1]', '')) > 0) +
@@ -69,7 +122,7 @@ function getRelievers($day, $session, $num, $date)
     if ($count < $num)
         $limit = $limit + 3;
     $query = "
-        SELECT f.Fid, f.name, f.department,f.YearsOfExperience,f.Designation, d.$month, s.$day, 
+        SELECT f.Fid, f.name, f.department,f.YearsOfExperience, f.email,f.Designation, d.$month, s.$day, 
         ifnull((LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[0]', '')) > 0) + 
         (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[1]', '')) > 0) + 
         (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, '$hours[2]', '')) > 0) + 
@@ -77,8 +130,8 @@ function getRelievers($day, $session, $num, $date)
         FROM faculties f JOIN duties d ON f.fid = d.fid 
         JOIN schedule s on f.fid = s.fid 
         where d.$month < 20 and f.designation in ('Professor', 'Associate Professor') and 
-        d.$month <= $limit order by MatchCount ASC, f.Designation DESC, d.$month ASC, 
-        f.YearsOfExperience DESC limit $num;
+        d.$month <= $limit and d.$month<f.CaderRatio order by MatchCount ASC, d.$month ASC, f.Designation ASC, 
+        f.YearsOfExperience ASC limit $num;
     ";
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -230,6 +283,32 @@ function getScheduleCie($date)
     return $rows;
 }
 
+function getDutiesBoth($date, $staffid, $wholeYear)
+{
+    global $conn;
+    if($wholeYear){
+        $query = "SELECT f.fid,f.StaffID, f.name, f.department,l.Duty_date, l.role, l.Duty_Session, l.ExamType from log l inner join faculties f on l.fid = f.fid where f.StaffID = ? and year(l.Duty_date) = ? order by l.Duty_Session desc, role desc";
+    }else{
+        $query = "SELECT f.fid,f.StaffID, f.name, f.department,l.Duty_date,l.role, l.Duty_Session, l.ExamType from log l inner join faculties f on l.fid = f.fid where f.StaffID = ? and l.Duty_date = ? order by l.Duty_Session desc, role desc";
+    }
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss",$staffid, $date);
+    $stmt->execute();
+    $faculties = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $rows = "";
+    foreach ($faculties as $faculty) {
+        $rows .= "<tr>
+                    <td>{$faculty['StaffID']}</td>
+                    <td>{$faculty['name']}</td>
+                    <td>{$faculty['department']}</td>
+                    <td>{$faculty['ExamType']}</td>
+                    <td>{$faculty['Duty_date']}</td>
+                    <td>{$faculty['Duty_Session']}</td>
+                    <td>{$faculty['role']}</td>
+                </tr>";
+    }
+    return $rows;
+}
 function getDutiesSee($date, $staffid, $wholeYear)
 {
     global $conn;
@@ -245,13 +324,10 @@ function getDutiesSee($date, $staffid, $wholeYear)
     $rows = "";
     foreach ($faculties as $faculty) {
         $rows .= "<tr>
-                    <td>{$faculty['StaffID']}</td>
+                    <<td>{$faculty['StaffID']}</td>
                     <td>{$faculty['name']}</td>
-                    <td>{$faculty['department']}</td>";
-                    if($wholeYear)
-                        $rows .= "<td>{$faculty['Duty_date']}</td>";
-
-        $rows .= "
+                    <td>{$faculty['department']}</td>
+                    <td>{$faculty['Duty_date']}</td>
                     <td>{$faculty['Duty_Session']}</td>
                     <td>{$faculty['role']}</td>
                 </tr>";
@@ -275,11 +351,8 @@ function getDutiesCie($date, $staffid, $wholeYear)
         $rows .= "<tr>
                     <td>{$faculty['StaffID']}</td>
                     <td>{$faculty['name']}</td>
-                    <td>{$faculty['department']}</td>";
-                    if($wholeYear)
-                        $rows .= "<td>{$faculty['Duty_date']}</td>";
-
-        $rows .= "
+                    <td>{$faculty['department']}</td>
+                    <td>{$faculty['Duty_date']}</td>
                     <td>{$faculty['Duty_Session']}</td>
                     <td>{$faculty['role']}</td>
                 </tr>";
@@ -519,6 +592,7 @@ function acceptFaculties($faculties, $date, $session, $role)
 {
     global $conn;
     $month = date('F', strtotime($date)); // Get the month from the date
+    $assigned_faculties = [];
 
     foreach ($faculties as $fid => $faculty) {
         // Insert into the log table
@@ -526,7 +600,15 @@ function acceptFaculties($faculties, $date, $session, $role)
         $logStmt = $conn->prepare($logQuery);
         $logStmt->bind_param("isss", $faculty['Fid'], $date, $session, $role);
         $logStmt->execute();
+        
+        // Collect assigned faculty details for email notification
+        $assigned_faculties[] = [
+            'email' => $faculty['email'],
+            'name' => $faculty['name'],
+            'duties' => [['date' => $date, 'session' => $session]]
+        ];
     }
+    return $assigned_faculties;
 }
 
 
@@ -563,7 +645,7 @@ function delete_data($path)
 
     if (($handle = fopen($path, "r")) !== false) {
         while (!feof($handle)) {
-            echo "Processing schedule...<br>";
+            // echo "Processing schedule...<br>";
             // Skip the first rows (header and empty rows)
             while (($row = fgetcsv($handle)) !== false) {
                 // echo $row[0];
@@ -678,7 +760,7 @@ function delete_data($path)
             }
         }
 
-        echo "Schedule processed successfully.";
+        // echo "Schedule processed successfully.";
     } else {
         echo "Failed to open the CSV file.";
     }
@@ -728,7 +810,7 @@ function getFacultiesForCIE($day, $session, $num, $date, $departments)
     // Build SQL
     $query = "
     SELECT
-        f.Fid, f.name, f.department, f.YearsOfExperience, d.$month,
+        f.Fid, f.name, f.department, f.YearsOfExperience, f.email, d.$month,
         s.$day,
         (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, ?, ''))) > 0 +
         (LENGTH(s.$day) - LENGTH(REPLACE(s.$day, ?, ''))) > 0 +
@@ -761,14 +843,73 @@ function acceptFacultiesCIE($faculties, $date, $session, $role)
     global $conn;
     $month = date('F', strtotime($date)); // Get the month from the date
     $ExamType = 'CIE';
+    $assigned_faculties = [];
+
     foreach ($faculties as $fid => $faculty) {
         // Insert into the log table
         $logQuery = "INSERT INTO log (fid, Duty_date, Duty_Session, Role, ExamType) VALUES (?, ?, ?, ?, ?)";
         $logStmt = $conn->prepare($logQuery);
         $logStmt->bind_param("issss", $faculty['Fid'], $date, $session, $role, $ExamType);
         $logStmt->execute();
+
+        // Collect assigned faculty details for email notification
+        $assigned_faculties[] = [
+            'email' => $faculty['email'],
+            'name' => $faculty['name'],
+            'duties' => [['date' => $date, 'session' => $session]]
+        ];
     }
+    return $assigned_faculties;
 }
 
 
+function getAllocatedDuties()
+{
+    global $conn;
+    $query = "SELECT l.Lid, f.Name, l.Duty_date, l.Duty_Session, l.ExamType FROM log l JOIN faculties f ON l.fid = f.fid ORDER BY l.Duty_date, l.Duty_Session";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+function getAllocatedDutiesByDateAndType($date, $examType)
+{
+    global $conn;
+    $query = "SELECT l.Lid, f.Name, l.Duty_date, l.Duty_Session, l.ExamType FROM log l JOIN faculties f ON l.fid = f.fid WHERE l.Duty_date = ? AND l.ExamType = ? ORDER BY l.Duty_Session";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $date, $examType);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+function swapDuties($duty1_id, $duty2_id)
+{
+    global $conn;
+
+    // Get the faculty IDs for the two duties
+    $query1 = "SELECT fid FROM log WHERE lid = ?";
+    $stmt1 = $conn->prepare($query1);
+    $stmt1->bind_param("i", $duty1_id);
+    $stmt1->execute();
+    $fid1 = $stmt1->get_result()->fetch_assoc()['fid'];
+
+    $query2 = "SELECT fid FROM log WHERE lid = ?";
+    $stmt2 = $conn->prepare($query2);
+    $stmt2->bind_param("i", $duty2_id);
+    $stmt2->execute();
+    $fid2 = $stmt2->get_result()->fetch_assoc()['fid'];
+
+    // Swap the faculty IDs
+    $update1 = "UPDATE log SET fid = ? WHERE lid = ?";
+    $stmt_update1 = $conn->prepare($update1);
+    $stmt_update1->bind_param("ii", $fid2, $duty1_id);
+    $stmt_update1->execute();
+
+    $update2 = "UPDATE log SET fid = ? WHERE lid = ?";
+    $stmt_update2 = $conn->prepare($update2);
+    $stmt_update2->bind_param("ii", $fid1, $duty2_id);
+    $stmt_update2->execute();
+
+    return true;
+}
 ?>

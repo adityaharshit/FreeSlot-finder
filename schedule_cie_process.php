@@ -25,10 +25,14 @@
             $month = $_POST['month']; // Selected month
             $year = date("Y"); // Assuming the current year
             $daysInMonth = getDaysInMonth($month);
-
+            $m = date("n");
             $data = [];
             $monthNumber = date("n", strtotime($month)); // Convert month name to numeric
-        
+            $allAssignedDuties = [];
+            if ($m > $monthNumber) {
+                $year = $year + 1;
+            }
+            
             // Traverse each day of the month
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 // Skip Sundays
@@ -50,17 +54,19 @@
                 if (!empty($morningData)) {
                     $dayOfWeek = substr(date('l', strtotime($date)), 0, 3);
                     $faculties = getFacultiesForCIE($dayOfWeek, 'morning', $morningData, $date, $departments);
-                    acceptFacultiesCIE($faculties, $date, 'morning', 'Examiner');
+                    $assigned_faculties = acceptFacultiesCIE($faculties, $date, 'morning', 'Examiner');
+                    $allAssignedDuties = array_merge($allAssignedDuties, $assigned_faculties);
 
                     flush(); // Ensure all output is sent to the browser
                     ob_flush(); // Flush the output buffer
         
                 }
                 if (!empty($afternoonData)) {
-                    
+
                     $dayOfWeek = substr(date('l', strtotime($date)), 0, 3);
                     $faculties = getFacultiesForCIE($dayOfWeek, 'afternoon', $afternoonData, $date, $departments);
-                    acceptFacultiesCIE($faculties, $date, 'afternoon', 'Examiner');
+                    $assigned_faculties = acceptFacultiesCIE($faculties, $date, 'afternoon', 'Examiner');
+                    $allAssignedDuties = array_merge($allAssignedDuties, $assigned_faculties);
 
                     flush(); // Ensure all output is sent to the browser
                     ob_flush(); // Flush the output buffer
@@ -71,6 +77,9 @@
 
             }
 
+            // After the loop, send emails
+            // sendDutyEmail($allAssignedDuties, 'CIE');
+        
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 // Skip Sundays
                 if (isSunday($year, $monthNumber, $day)) {
@@ -101,7 +110,7 @@
             echo '<form method="post" action="export_faculty_duties_cie.php">';
             echo '<input type="hidden" name="month" value="' . $month . '">';
             echo '<input type="hidden" name="year" value="' . $year . '">';
-            echo '<button type="submit" class="btn btn-success">Download Faculty Duty Report</button>';
+            echo '<button type="submit" class="btn btn-success">Download Faculty Duty Report and Send Email</button>';
             echo '</form>';
             echo '</div>';
 

@@ -82,6 +82,7 @@
             <div class="mb-3">
                 <label for="type" class="form-label">Select Type:</label>
                 <select id="type" class="form-select" name="type">
+                    <option value="both">CIE+SEE</option>
                     <option value="cie">CIE</option>
                     <option value="see">SEE</option>
                 </select>
@@ -116,19 +117,31 @@
             $year = $_POST['year'];
             $staffid = $_POST['staffID'];
             // Get the submitted data
+            if ($type == 'both') {
+                echo "<div class='table-container'>";
+                echo "<h2>Schedule</h2>";
+                echo "<table>";
+                echo "<tr><th>Staff ID</th><th>Name</th><th>Department</th><th>ExamType</th><th>Date</th><th>Session</th><th>Role</th></tr>";
+            } else {
+                echo "<div class='table-container'>";
+                echo "<h2>Schedule</h2>";
+                echo "<table>";
+                echo "<tr><th>Staff ID</th><th>Name</th><th>Department</th><th>Date</th><th>Session</th><th>Role</th></tr>";
+            }
             if (!isset($_POST['month']) || empty($_POST['month'])) {
-                if ($type == 'cie')
-                    $tableContent = getDutiesCie($year, $staffid, true);
-                else
-                    $tableContent = getDutiesSee($year, $staffid, true);
-                if (!empty($tableContent)) {
-                    echo "<div class='table-container'>";
-                    echo "<h2>Schedule for $year</h2>";
-                    echo "<table>";
-                    echo "<tr><th>Staff ID</th><th>Name</th><th>Department</th><th>Date</th></th><th>Session</th><th>Role</th></tr>";
-                    echo $tableContent;
-                    echo "</table>";
-                    echo "</div>";
+                if ($type == 'both') {
+                    $tableContent = getDutiesBoth($year, $staffid, true);
+                    if (!empty($tableContent)) {
+                        echo $tableContent;
+                    }
+                } else {
+                    if ($type == 'cie')
+                        $tableContent = getDutiesCie($year, $staffid, true);
+                    else
+                        $tableContent = getDutiesSee($year, $staffid, true);
+                    if (!empty($tableContent)) {
+                        echo $tableContent;
+                    }
                 }
             } else {
 
@@ -150,21 +163,25 @@
                     // Process morning and afternoon values for the day
                     $morningKey = $day . '-morning';
                     $afternoonKey = $day . '-afternoon';
-                    if ($type == 'cie')
-                        $tableContent = getDutiesCie($date, $staffid, false);
-                    else
-                        $tableContent = getDutiesSee($date, $staffid, false);
-                    if (!empty($tableContent)) {
-                        echo "<div class='table-container'>";
-                        echo "<h2>Schedule for $date</h2>";
-                        echo "<table>";
-                        echo "<tr><th>Staff ID</th><th>Name</th><th>Department</th><th>Session</th><th>Role</th></tr>";
-                        echo $tableContent;
-                        echo "</table>";
-                        echo "</div>";
+                    if ($type == 'both') {
+                        $tableContent = getDutiesBoth($date, $staffid, false);
+                        if (!empty($tableContent)) {
+                            echo $tableContent;
+                        }
+                    } else {
+                        if ($type == 'cie')
+                            $tableContent = getDutiesCie($date, $staffid, false);
+                        else
+                            $tableContent = getDutiesSee($date, $staffid, false);
+                        if (!empty($tableContent)) {
+                            echo $tableContent;
+
+                        }
                     }
                 }
             }
+            echo "</table>";
+            echo "</div>";
             // echo "</table>";
         }
 

@@ -13,6 +13,7 @@ if (isset($_GET['id'])) {
         echo "<script>alert('Faculty deleted successfully'); window.location.href= 'faculty.php';</script>";
         exit;
     } else {
+        echo $id;
         echo "Failed to delete Faculty.";
     }
 } else {

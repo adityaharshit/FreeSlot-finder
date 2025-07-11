@@ -1,14 +1,14 @@
 CREATE TABLE `finder`.`faculties` (`Fid` INT NOT NULL AUTO_INCREMENT , `Name` VARCHAR(50) NOT NULL , `FacultyId` VARCHAR(50) NOT NULL , `Email` VARCHAR(50) NOT NULL , `Department` VARCHAR(50) NOT NULL , `Designation` Varchar(50), `JoiningDate` Date, PRIMARY KEY (`Fid`)) ENGINE = InnoDB;
 
-CREATE TABLE `finder`.`duties` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid));
+CREATE TABLE `finder`.`duties` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid) ON DELETE CASCADE);
 
-CREATE TABLE `finder`.`dutiesCIE` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid));
+CREATE TABLE `finder`.`dutiesCIE` (`Did` INT NOT NULL AUTO_INCREMENT , `Fid` INT NOT NULL , `January` INT NOT NULL DEFAULT '0' , `February` INT NOT NULL DEFAULT '0' , `March` INT NOT NULL DEFAULT '0' , `April` INT NOT NULL DEFAULT '0' , `May` INT NOT NULL DEFAULT '0' , `June` INT NOT NULL DEFAULT '0' , `July` INT NOT NULL DEFAULT '0' , `August` INT NOT NULL DEFAULT '0' , `September` INT NOT NULL DEFAULT '0' , `October` INT NOT NULL DEFAULT '0' , `November` INT NOT NULL DEFAULT '0' , `December` INT NOT NULL DEFAULT '0' , PRIMARY KEY (`Did`), foreign key(Fid) REFERENCES faculties(Fid) ON DELETE CASCADE);
 
 
 
 CREATE TABLE Log(Lid int primary key AUTO_INCREMENT, Fid int, Duty_date date, Duty_Session varchar(20), FOREIGN KEY(Fid) REFERENCES faculties(Fid));
 
-create table Schedule(Id int primary key AUTO_INCREMENT, Fid int not null, Mon varchar(50), Tue varchar(50), Wed varchar(50),Thu varchar(50),Fri varchar(50),Sat varchar(50), FOREIGN KEY(Fid) REFERENCES faculties(Fid)); 
+create table Schedule(Id int primary key AUTO_INCREMENT, Fid int not null, Mon varchar(50), Tue varchar(50), Wed varchar(50),Thu varchar(50),Fri varchar(50),Sat varchar(50), FOREIGN KEY(Fid) REFERENCES faculties(Fid) ON DELETE CASCADE); 
 
 CREATE TRIGGER `add_faculty_data` AFTER INSERT ON `faculties`
  FOR EACH ROW Insert into duties(Fid) values(New.Fid)

@@ -46,8 +46,13 @@
             <div class="row mb-2">
                 <div class="col-md-6">
                     <label for="designation" class="form-label">Designation</label>
-                    <input type="text" class="form-control" id="designation" name="designation"
-                        placeholder="E.g., Professor" required>
+                    <select class="form-control" id="designation" name="designation" required>
+                        <option value="Professor">Professor</option>
+                        <option value="Assistant Professor">Assistant Professor</option>
+                        <option value="Associate Professor">Associate Professor</option>
+                        <option value="HOD">HOD</option>
+                        <option value="Lab Assistant">Lab Assistant</option>
+                    </select>
                 </div>
                 <div class="col-md-6">
                     <label for="yearsOfExperience" class="form-label">Experience (in yrs)</label>

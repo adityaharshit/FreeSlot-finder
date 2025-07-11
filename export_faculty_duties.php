@@ -59,6 +59,9 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
+// Send emails
+sendDutyEmail($facultyData, 'SEE');
+
 // Generate CSV content
 $csv = "Name,Department,Email,Total Duties";
 for ($i = 1; $i <= $maxDuties; $i++) {
