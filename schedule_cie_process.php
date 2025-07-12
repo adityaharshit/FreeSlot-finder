@@ -32,7 +32,7 @@
             if ($m > $monthNumber) {
                 $year = $year + 1;
             }
-            
+            resetCounterCie( $month);
             // Traverse each day of the month
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 // Skip Sundays

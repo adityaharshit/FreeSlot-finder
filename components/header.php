@@ -15,11 +15,12 @@ session_start();
                     <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="course.php">Add Course</a></li>
                     <li class="nav-item"><a class="nav-link" href="faculty.php">Add Faculty</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schedule_all.php">Schedule SEE</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schedule_cie.php">Schedule CIE</a></li>
+                    <li class="nav-item"><a class="nav-link" href="swap_duties.php">Swap Duties</a></li>
 
                     <li class="nav-item"><a class="nav-link" href="fetch_details.php">Fetch Details</a></li>
                     <!-- <li class="nav-item"><a class="nav-link" href="scheduler.php">Scheduler</a></li> -->
-                    <li class="nav-item"><a class="nav-link" href="schedule_all.php">Schedule SEE</a></li>
-                    <li class="nav-item"><a class="nav-link" href="schedule_cie.php">Schedule CIE</a></li>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
                 <?php endif; ?>
 

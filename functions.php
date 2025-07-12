@@ -55,6 +55,29 @@ function sendDutyEmail($facultyDuties, $examType) {
     }
 }
 
+
+function resetCounter($month){
+    global $conn;
+    $query = "UPDATE duties SET $month = 0";
+    $stmt = $conn->prepare($query);
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function resetCounterCie($month){
+    global $conn;
+    $query = "UPDATE dutiescie SET $month = 0";
+    $stmt = $conn->prepare($query);
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function getFaculties($day, $session, $num, $date)
 {
     global $conn, $limit; // Database connection
@@ -423,44 +446,44 @@ function getFacultiesForOneDay($day, $session, $num, $date)
 
 
 
-function getAvailableFacultiesWithLessHours($day, $hours, $num, $date)
-{
-    global $conn, $limit; // Database connection
-    $hoursStr = implode(',', $hours);
-    $month = date('F', strtotime($date));
-    $month = strtolower($month);
-    $hour = array();
-    if ($hours[0] == 1) {
-        $hour[0] = implode(',', array(1, 2, 4));
-        $hour[1] = implode(',', array(1, 2, 5));
-        $hour[2] = implode(',', array(1, 4, 5));
-        $hour[3] = implode(',', array(2, 4, 5));
-    } else {
-        $hour[0] = implode(',', array(7, 8, 9));
-        $hour[1] = implode(',', array(7, 8, 10));
-        $hour[2] = implode(',', array(7, 9, 10));
-        $hour[3] = implode(',', array(8, 9, 10));
-    }
-    echo "<script>console.log('$month')</script>";
-    echo "<script>console.log('$day')</script>";
-    $query = "
-        SELECT f.fid, f.name, f.department, d.$month
-        FROM faculties f
-        JOIN duties d ON f.fid = d.fid join schedule s on f.fid = s.fid
-        WHERE f.fid IN (
-            SELECT fid
-            FROM schedule
-            WHERE ($day not IN ($hour[0]) OR $day not IN ($hour[1]) OR $day  not IN ($hour[2]) OR $day not IN ($hour[3])) and $day IN ($hoursStr)
-        )and d.$month < $limit
-        ORDER BY d.$month ASC, f.JoiningDate DESC
-    ";
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
-    $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $_SESSION['fetched_faculty_less_hours'] = $fetched_faculty;
-    $_SESSION['extra_limit'] = $num;
-    return $fetched_faculty;
-}
+// function getAvailableFacultiesWithLessHours($day, $hours, $num, $date)
+// {
+//     global $conn, $limit; // Database connection
+//     $hoursStr = implode(',', $hours);
+//     $month = date('F', strtotime($date));
+//     $month = strtolower($month);
+//     $hour = array();
+//     if ($hours[0] == 1) {
+//         $hour[0] = implode(',', array(1, 2, 4));
+//         $hour[1] = implode(',', array(1, 2, 5));
+//         $hour[2] = implode(',', array(1, 4, 5));
+//         $hour[3] = implode(',', array(2, 4, 5));
+//     } else {
+//         $hour[0] = implode(',', array(7, 8, 9));
+//         $hour[1] = implode(',', array(7, 8, 10));
+//         $hour[2] = implode(',', array(7, 9, 10));
+//         $hour[3] = implode(',', array(8, 9, 10));
+//     }
+//     echo "<script>console.log('$month')</script>";
+//     echo "<script>console.log('$day')</script>";
+//     $query = "
+//         SELECT f.fid, f.name, f.department, d.$month
+//         FROM faculties f
+//         JOIN duties d ON f.fid = d.fid join schedule s on f.fid = s.fid
+//         WHERE f.fid IN (
+//             SELECT fid
+//             FROM schedule
+//             WHERE ($day not IN ($hour[0]) OR $day not IN ($hour[1]) OR $day  not IN ($hour[2]) OR $day not IN ($hour[3])) and $day IN ($hoursStr)
+//         )and d.$month < $limit
+//         ORDER BY d.$month ASC, f.JoiningDate DESC
+//     ";
+//     $stmt = $conn->prepare($query);
+//     $stmt->execute();
+//     $fetched_faculty = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+//     $_SESSION['fetched_faculty_less_hours'] = $fetched_faculty;
+//     $_SESSION['extra_limit'] = $num;
+//     return $fetched_faculty;
+// }
 
 
 
